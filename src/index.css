@@ -5,9 +5,15 @@ body {
   }
   
   ol, ul {
-    padding-left: 30px;
+    
+    padding-bottom: 20px;
   }
   
+li {
+  margin-bottom: 10px;
+}
+
+
   .board-row:after {
     clear: both;
     content: "";

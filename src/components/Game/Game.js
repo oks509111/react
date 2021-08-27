@@ -10,10 +10,13 @@ class Game extends React.Component {
           
           history: [{squares: Array(9).fill('')}],
           nextStep: 'X',
+          currentStep: 0,
           isFinish: false
           };
           this.calculateWinner = this.calculateWinner.bind(this);
         this.clickSquare = this.clickSquare.bind(this);
+        this.showButtonsHistory = this.showButtonsHistory.bind(this);
+        this.jumpTo = this.jumpTo.bind(this);
           }
         
      calculateWinner(squares) {
@@ -39,18 +42,18 @@ class Game extends React.Component {
     clickSquare(i){
       const {history} = this.state;
       const currentSquearesCopy = history[history.length -1].squares;
-       
-       
+
         let isFinish;
         if(currentSquearesCopy[i] === '' && !this.state.isFinish ) {
           currentSquearesCopy [i] = this.state.nextStep;
         isFinish = this.calculateWinner(currentSquearesCopy);
         this.setState(state=>{
-          const {nextStep}= state;
+          const { history, nextStep}= state;
             return {
               squares:currentSquearesCopy,
               history:history.concat({squares: currentSquearesCopy}),
                nextStep: isFinish ? nextStep : nextStep === 'X' ? '0' : 'X',
+               currentStep: history.length,
                isFinish
             };
                 
@@ -58,7 +61,19 @@ class Game extends React.Component {
             console.log('history', this.state.history);
           }
     }
-    
+
+    jumpTo (step) {
+       this.setState ({currentStep:step});
+    }
+
+     showButtonsHistory()  {
+       return this.state.history.map((step, index) => {
+       return (<li>
+         <button onClick={() => this.jumpTo(index)}>Перейти на ход {index + 1}</button>
+       </li>
+       );
+       });
+    }
   
 render(){
   const {history, nextStep, isFinish} = this.state;
@@ -70,6 +85,8 @@ render(){
   }
 
   const currentSqueares = history[history.length -1].squares;
+  const buttonsHistory = this.showButtonsHistory();
+
 
       const startNewGame = () => {
         return (
@@ -94,8 +111,10 @@ render(){
           </div>
 
           <div className="game-info">
-            <div>{/* status */}</div>
-            <ol>{/* TODO */}</ol>
+            
+            <ul>
+              {buttonsHistory}
+            </ul>
           </div>
         </div>
       );
